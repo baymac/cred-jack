@@ -1,0 +1,35 @@
+.root {
+  display: grid;
+  grid: auto;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 100%;
+  padding: 0 var(--mb-1);
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.section {
+  padding: 2rem 0 4rem;
+}
+
+@media screen and (min-width: 351px) {
+  .container {
+    padding: 0 var(--mb-1-5);
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .section {
+    padding: 6rem 0;
+  }
+
+  .container {
+    padding: 0 6rem;
+  }
+}

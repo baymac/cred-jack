@@ -1,0 +1,149 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.header .thanks_message {
+  color: var(--title-color);
+  text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.description {
+  color: var(--text-color);
+  margin: var(--mb-0-5) var(--mb-1);
+  text-align: center;
+  display: inline-block;
+  max-width: 300px;
+}
+
+.input_box {
+  position: relative;
+  width: 100%;
+  margin-top: var(--mb-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.instructions {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  text-align: center;
+}
+
+.reset_input_box {
+  position: relative;
+  width: 100%;
+  margin-top: var(--mb-1);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.reset_input_box button {
+  max-width: 300px;
+  width: 100%;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+  background-color: var(--button-color);
+  color: var(--default-bw);
+  font-size: var(--h4-font-size);
+  cursor: pointer;
+  height: 52px; /* Hard coding height to match height with text during loading */
+}
+
+.input_box input {
+  max-width: 300px;
+  width: 100%;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+}
+
+.input_box button,
+.reset_input_box button {
+  max-width: 300px;
+  width: 100%;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+  background-color: var(--button-color);
+  color: var(--default-bw);
+  font-size: var(--h4-font-size);
+  cursor: pointer;
+  height: 52px; /* Hard coding height to match height with text during loading */
+}
+
+.button_disable button {
+  background-color: var(--button-color-disabled);
+  cursor: no-drop;
+}
+
+.error_message {
+  margin-top: var(--mb-1);
+  color: var(--error-color);
+}
+
+.error_message::before {
+  display: inline;
+  content: '⚠ ';
+}
+
+.email_failure_description {
+  color: var(--text-color);
+  text-align: center;
+  max-width: 400px;
+}
+
+.email_failure_list {
+  list-style: disc;
+  padding-left: 1rem;
+}
+
+.email_failure_list li::marker {
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  text-indent: 0px !important;
+  text-align: start !important;
+  text-align-last: start !important;
+}
+
+.go_back {
+  margin-bottom: var(--mb-1);
+}
+
+.hide {
+  display: none;
+}
+
+@media screen and (min-width: 600px) {
+  .add_new_line {
+    display: none;
+  }
+
+  .header {
+    flex-direction: row;
+  }
+
+  .email_icon {
+    margin-left: var(--mb-0-5);
+  }
+
+  .reset_input_box button,
+  .input_box button {
+    height: 55px; /* Hard coding height to match height with text during loading */
+  }
+}

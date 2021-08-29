@@ -1,3 +1,5 @@
+import HomeLayout from '../layouts/HomeLayout';
+
 export default function Home() {
-  return <>Hello</>
+  return <HomeLayout>Hello</HomeLayout>;
 }

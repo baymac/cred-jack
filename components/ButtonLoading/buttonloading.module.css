@@ -1,0 +1,28 @@
+.squareHolder {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.squareHolder .square {
+  animation: loading 1.5s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+}
+
+.square {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 4px;
+  background-color: var(--first-color);
+}
+
+@keyframes loading {
+  0% {
+    transform: translate(-35px, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(35px, 0) rotate(360deg);
+  }
+  100% {
+    transform: translate(-35px, 0) rotate(0deg);
+  }
+}

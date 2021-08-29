@@ -1,0 +1,274 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/Inter-Regular.woff2) format('woff2');
+  unicode-range: U+000-5FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+  src: url(/fonts/Inter-Medium.woff2) format('woff2');
+  unicode-range: U+000-5FF;
+}
+
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/fonts/Roboto-Light.woff2) format('woff2');
+  unicode-range: U+000-5FF;
+}
+
+/*==================== GOOGLE FONTS ====================*/
+
+/*==================== VARIABLES CSS ====================*/
+:root {
+  --header-height: 4rem;
+
+  /*========== Colors ==========*/
+  /* Change favorite color */
+  --hue-color: 230;
+  /* Mostly used in navbar and main social links */
+  /* Alternate to --first-color-lighter in dark mode */
+  --first-color: hsl(230, 70%, 60%);
+  /* Hover on close in nav and magic button */
+  --first-color-alt: hsl(230, 57%, 53%);
+  /* Blog button, alt body color */
+  --first-color-lighter: /*hsl(230, 92%, 84%)*/ hsl(230, 60%, 88%);
+  /* Footer hover */
+  --first-color-lighter-alt: hsl(230, 20%, 30%);
+  /* All nav elements, blog button */
+  --title-color: hsl(230, 0%, 0%);
+  /* Blog Links Header */
+  --title-color-alt: hsl(230, 57%, 48%);
+  /* Home subtitle */
+  --text-color: hsl(230, 8%, 45%);
+  /* footer copy */
+  --text-color-light: hsl(230, 8%, 65%);
+  /* Unused */
+  --input-color: hsl(230, 70%, 96%);
+  /* Body, nav menu (mobile), header bg */
+  --body-color: hsl(230, 60%, 99%);
+  /* Unused */
+  --default-bw: hsl(0, 0%, 100%);
+  --scroll-bar-color: hsl(230, 12%, 90%);
+  --scroll-thumb-color: hsl(230, 12%, 80%);
+  /* Footer bg */
+  --footer-color: var(--first-color-lighter);
+  /* header bg */
+  --header-color: var(--first-color);
+  /* header box shadow */
+  --inverted-bw: hsl(0, 0%, 0%);
+  /* Color for logo, buttons, menu (only big screen) */
+  --nav-items-color: hsl(0, 0%, 100%);
+  --nav-items-hover-color: hsl(230, 90%, 92%);
+  --error-color: hsl(350, 100%, 56%);
+  --footer-border-color: hsl(0, 0%, 70%);
+  --nav-items-select-color: var(--first-color-lighter);
+  --nav-items-divider-color: hsl(0, 0%, 60%);
+  --button-hover-color: hsl(0, 0%, 90%);
+  --button-color: var(--first-color);
+  --button-color-disabled: hsl(230, 70%, 90%);
+
+  /*========== Font and typography ==========*/
+  --body-font: 'Inter', sans-serif;
+
+  --big-screen-width: 1000px;
+
+  /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+  --big-font-size: 2.5rem;
+  --h1-font-size: 2.25rem;
+  --h2-font-size: 2rem;
+  --h3-font-size: 1.125rem;
+  --normal-font-size: 0.938rem;
+  --small-font-size: 0.813rem;
+  --smaller-font-size: 0.75rem;
+
+  /*========== Font weight ==========*/
+  --font-medium: 500;
+  --font-semi-bold: 600;
+
+  /*========== Margenes Bottom ==========*/
+  /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
+  --mb-0-25: 0.25rem;
+  --mb-0-5: 0.5rem;
+  --mb-0-75: 0.75rem;
+  --mb-1: 1rem;
+  --mb-1-5: 1.5rem;
+  --mb-2: 2rem;
+  --mb-2-5: 2.5rem;
+  --mb-3: 3rem;
+
+  /*========== z index ==========*/
+  --z-tooltip: 10;
+  --z-fixed: 100;
+  --z-modal: 1000;
+
+  /*========== box shadow ==========*/
+  --bs: 0.25em 0.25em 0.75em rgba(0, 0, 0, 0.25),
+    0.125em 0.125em 0.25em rgba(0, 0, 0, 0.15);
+}
+
+/* Font size for large devices */
+@media screen and (min-width: 968px) {
+  :root {
+    --big-font-size: 3rem;
+    --h1-font-size: 2.25rem;
+    --h2-font-size: 1.5rem;
+    --h3-font-size: 1.25rem;
+    --h4-font-size: 1.12rem;
+    --normal-font-size: 1rem;
+    --small-font-size: 0.875rem;
+    --smaller-font-size: 0.813rem;
+  }
+}
+
+/*========== Variables Dark theme ==========*/
+
+[data-theme='dark'] {
+  --first-color: /*hsl(230, 92%, 85%)*/ hsl(212, 33%, 89%);
+  --first-color-second: hsl(230, 30%, 8%);
+  --first-color-alt: /*hsl(230, 57%, 75%)*/ hsl(211, 27%, 70%);
+  --first-color-lighter: /*hsl(230, 70%, 60%)*/ hsl(210, 22%, 40%);
+  --first-color-lighter-alt: /*hsl(230, 70%, 60%)*/ hsl(211, 27%, 90%);
+  --title-color: hsl(0, 0%, 95%);
+  --title-color-alt: hsl(217, 89%, 80%); /* blog title links */
+  --text-color: hsl(45, 9%, 83%);
+  --input-color: hsl(230, 29%, 16%);
+  --body-color: /*hsl(0, 0%, 13%);*/ hsl(200, 5%, 12%);
+  --default-bw: hsl(0, 0%, 0%);
+  --scroll-bar-color: hsl(230, 12%, 48%);
+  --scroll-thumb-color: hsl(230, 12%, 36%);
+  --footer-color: hsl(0, 0%, 5%);
+  --header-color: hsl(0, 0%, 8%);
+  --inverted-bw: hsl(0, 0%, 100%);
+  --nav-items-color: hsl(0, 0%, 100%);
+  --nav-items-hover-color: hsl(210, 90%, 92%);
+  --error-color: hsl(350, 79%, 59%);
+  --footer-border-color: hsl(0, 0%, 40%);
+  --nav-items-select-color: hsl(0, 0%, 20%);
+  --nav-items-divider-color: hsl(0, 0%, 30%);
+  --button-hover-color: hsl(0, 0%, 20%);
+  --button-color: var(--first-color);
+  --button-color-disabled: hsl(0, 0%, 60%);
+}
+
+/*========== Button Dark/Light ==========*/
+
+/*==================== BASE ====================*/
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box; /* Calculate padding within the width instead of adding on to total width */
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--body-font);
+  font-size: var(--normail-font-size);
+  background-color: var(--body-color);
+  color: var(--text-color);
+  min-height: 100%;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.1;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
+}
+
+h3 {
+  font-size: var(--h3-font-size);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/*========== SCROLL BAR ==========*/
+
+::-webkit-scrollbar {
+  width: 0.6rem;
+  background-color: var(--scroll-bar-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb-color);
+  border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-color-light);
+}
+
+.prevent-scroll {
+  overflow: hidden;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--title-color);
+  -webkit-box-shadow: 0 0 0px 1000px -internal-light-dark(
+      rgb(255, 255, 255),
+      rgb(59, 59, 59)
+    ) inset;
+  box-shadow: 0 0 0px 1000px -internal-light-dark(
+      rgb(255, 255, 255),
+      rgb(59, 59, 59)
+    ) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    margin: 0;
+  }
+}

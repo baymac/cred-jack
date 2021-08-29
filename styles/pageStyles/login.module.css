@@ -1,0 +1,21 @@
+.center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: auto;
+  width: 100%;
+}
+
+.container {
+  margin: 0 2rem;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+}
+
+@media screen and (min-width: 410px) {
+  .center {
+    max-width: 400px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
