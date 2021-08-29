@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import LoginLayout from '../../layouts/LoginLayout';
-import { useForm } from 'react-hook-form';
-import cn from 'classnames';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import styles from './userlogin.module.css';
+import cn from 'classnames';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import LoginLayout from '../../layouts/LoginLayout';
+import fetchJson from '../../lib/fetchJson';
+import useUser from '../../lib/useUser';
 import ButtonLoading from '../ButtonLoading/ButtonLoading';
-import sendOtp from '../../pages/api/sendOtp';
+import styles from './userlogin.module.css';
 
 const LoginSchema = yup.object().shape({
   phone: yup
@@ -28,6 +29,11 @@ export interface ILoginUserRequest {
 }
 
 export default function UserLogin() {
+  const { mutateUser } = useUser({
+    redirectTo: '/',
+    redirectIfFound: true,
+  });
+
   const [loading, setLoading] = useState(false);
 
   const [otpSent, setOtpSent] = useState(false);
@@ -65,15 +71,18 @@ export default function UserLogin() {
       setLoading(false);
       setOtpSent(true);
     } else {
-      const res = await fetch('/api/verifyOtp', {
-        method: 'POST',
-        body: JSON.stringify({ otp: data.otp, token }),
-      }).then((res) => res.json());
-      const access_token = res.access_token;
-      // A check to ensure reset was not clicked during the request being processed
-      if (otpSent) {
-        console.log(access_token);
-      }
+      mutateUser(
+        await fetchJson('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ otp: data.otp, token }),
+        })
+      );
+
+      // // A check to ensure reset was not clicked during the request being processed
+      // if (otpSent) {
+      //   console.log(user);
+      // }
       setLoading(false);
       // setOtpSent(false); not req?
     }
