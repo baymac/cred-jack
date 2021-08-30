@@ -33,12 +33,8 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
           />
           {/* Meta */}
-          <meta name="description" content="Bad cops creation of Credex" />
-          <meta name="apple-mobile-web-app-capable" content="yes"></meta>
-          <meta
-            name="apple-mobile-web-app-status-bar-style"
-            content="black-translucent"
-          />
+          <meta name="description" content="Bad cops creation of Cred Jack" />
+          <link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
         </Head>
         <body>
           <Main />

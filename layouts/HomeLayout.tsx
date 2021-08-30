@@ -7,7 +7,7 @@ export default function HomeLayout({ children }) {
   return (
     <div className={styles.root}>
       <Head>
-        <title>Bad Cops Creation</title>
+        <title>Cred Jack</title>
       </Head>
       <Nav />
       {children}
