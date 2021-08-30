@@ -112,4 +112,8 @@
   .nav__item_selected > .nav__link {
     color: var(--inverted-bw);
   }
+
+  .signout_nav_item {
+    display: none;
+  }
 }

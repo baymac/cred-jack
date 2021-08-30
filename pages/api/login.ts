@@ -42,10 +42,17 @@ interface IUserResponse {
   existing_user: boolean;
 }
 
-const getUserProfile = async ({ access_token }): Promise<IUserResponse> => {
+interface INonExistingUser {
+  existing_user: boolean;
+  phone: number;
+}
+
+const getUserProfile = async ({
+  access_token,
+}): Promise<IUserResponse | INonExistingUser> => {
   const myHeaders = new Headers();
   myHeaders.append('credaccess-access-token', access_token);
-  myHeaders.append('credaccess-secret-key', '6bb90d09c8ea279ffc87b364944b5ae0');
+  myHeaders.append('credaccess-secret-key', process.env.CRED_SECRET);
 
   const requestOptions: RequestInit = {
     method: 'GET',

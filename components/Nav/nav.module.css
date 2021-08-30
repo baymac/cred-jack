@@ -21,7 +21,8 @@
 
 .nav__toggle,
 .nav__changeTheme,
-.nav__logo_button {
+.nav__logo_button,
+.nav__signout {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,25 +55,29 @@
 }
 
 .nav__changeTheme:hover,
-.nav__logo_button:hover {
+.nav__logo_button:hover,
+.nav__signout:hover {
   border: 1px solid var(--nav-items-hover-color);
 }
 
 .nav__logo,
 .nav__toggle,
-.nav__changeTheme {
+.nav__changeTheme,
+.nav__signout {
   color: var(--nav-items-color);
   font-weight: var(--font-medium);
 }
 
 .nav__changeTheme:hover,
 .nav__toggle:hover,
-.nav__close:hover {
+.nav__close:hover,
+.nav__signout:hover {
   color: var(--nav-items-hover-color);
 }
 
 .nav__toggle,
-.nav__changeTheme {
+.nav__changeTheme,
+.nav__signout {
   font-size: 1.1rem;
   cursor: pointer;
 }
@@ -107,8 +112,13 @@
 
 .nav__toggle,
 .nav__changeTheme,
-.skeleton_loader_container {
+.skeleton_loader_container,
+.nav__signout {
   padding: 3px;
+}
+
+.nav__signout {
+  margin-left: 1rem;
 }
 
 @media screen and (max-width: 600px) {
@@ -135,6 +145,10 @@
 
   .nav__show_menu {
     top: 0;
+  }
+
+  .nav__signout {
+    display: none;
   }
 }
 

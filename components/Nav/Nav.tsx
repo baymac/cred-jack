@@ -4,7 +4,9 @@ import {
   UilMoon,
   UilMultiply,
   UilSun,
+  UilSignOutAlt,
 } from '@iconscout/react-unicons';
+
 import cn from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -16,6 +18,8 @@ import NavLinkMobile from './NavLinkMobile';
 import NavLinkBigScreen from './NavLinkBigScreen';
 import { useTheme } from 'next-themes';
 import Logo from '../Logo/Logo';
+import useUser from '../../lib/useUser';
+import fetchJson from '../../lib/fetchJson';
 
 export default function Nav() {
   const { navBarOpen, setNavBarOpen } = useAppContext();
@@ -27,6 +31,8 @@ export default function Nav() {
   useEffect(() => setMounted(true), []);
 
   const router = useRouter();
+
+  const { mutateUser } = useUser();
 
   return (
     <>
@@ -66,6 +72,7 @@ export default function Nav() {
                   onClick: () =>
                     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark'),
                   'aria-label': 'change-theme-button',
+                  title: 'Change theme',
                 },
                 createElement(
                   resolvedTheme === 'dark' ? UilSun : UilMoon,
@@ -83,6 +90,7 @@ export default function Nav() {
                   'div',
                   {
                     className: cn(styles.skeleton_loader),
+                    title: 'Loading...',
                   },
                   null
                 )}
@@ -93,6 +101,7 @@ export default function Nav() {
                 onClick={() => setNavBarOpen(true)}
                 className={styles.nav__toggle}
                 aria-label="nav-open-button"
+                title="Show Menu"
               >
                 <UilApps id="nav_toggle" width={28} height={28} />
               </button>
@@ -102,9 +111,34 @@ export default function Nav() {
                 className={styles.nav__toggle}
                 onClick={() => setNavBarOpen(false)}
                 aria-label="nav-close-button"
+                title="Close Menu"
               >
                 <UilMultiply width={28} height={28} id="nav_toggle" />
               </button>
+            )}
+            {createElement(
+              'button',
+              {
+                className: cn(styles.nav__signout),
+                onClick: async () => {
+                  mutateUser(
+                    await fetchJson('/api/logout', { method: 'POST' }),
+                    false
+                  );
+                  router.push('/login');
+                },
+                'aria-label': 'sign-out-button',
+                title: 'Sign out',
+              },
+              createElement(
+                UilSignOutAlt,
+                {
+                  id: 'sign-out-icon',
+                  width: 28,
+                  height: 28,
+                },
+                null
+              )
             )}
           </div>
         </nav>

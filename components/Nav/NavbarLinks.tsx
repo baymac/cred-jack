@@ -1,9 +1,12 @@
-import { UilHome } from '@iconscout/react-unicons';
+import { UilHome, UilSignOutAlt } from '@iconscout/react-unicons';
 import cn from 'classnames';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { createElement } from 'react';
 import { useAppContext } from '../../context/AppContextProvider';
 import useNavSelection from '../../hooks/useNavSelection';
+import fetchJson from '../../lib/fetchJson';
+import useUser from '../../lib/useUser';
 import styles from './navlink.module.css';
 
 export interface INavItem {
@@ -26,6 +29,10 @@ export default function NavBarLinks() {
   const { setNavBarOpen } = useAppContext();
 
   const [selectedMenu] = useNavSelection();
+
+  const { mutateUser } = useUser();
+
+  const router = useRouter();
 
   return (
     <>
@@ -51,6 +58,26 @@ export default function NavBarLinks() {
             </a>
           </Link>
         ))}
+        <a
+          className={cn(styles.nav__item, styles.signout_nav_item)}
+          onClick={async () => {
+            mutateUser(
+              await fetchJson('/api/logout', { method: 'POST' }),
+              false
+            );
+            router.push('/login');
+          }}
+          tabIndex={0}
+        >
+          <span className={styles.nav__link}>
+            {createElement(
+              UilSignOutAlt,
+              { className: styles.nav__icon },
+              null
+            )}
+            Sign Out
+          </span>
+        </a>
       </div>
     </>
   );
