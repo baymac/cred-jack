@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import useUser from '../../lib/useUser';
-import styles from './credjack.module.css';
-import rootStyles from '../../styles/root.module.css';
 import cn from 'classnames';
+import { useState } from 'react';
+import useUser from '../../lib/useUser';
+import rootStyles from '../../styles/root.module.css';
+import styles from './credjack.module.css';
 
 interface Card {
   number: number;
@@ -20,6 +20,8 @@ enum States {
   idle,
   progress,
 }
+
+// Inspired by https://codepen.io/jeffleu/pen/MbVGmM
 
 const generateDeck = (): TDeck => {
   const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
