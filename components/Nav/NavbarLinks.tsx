@@ -65,6 +65,7 @@ export default function NavBarLinks() {
               await fetchJson('/api/logout', { method: 'POST' }),
               false
             );
+            setNavBarOpen(false);
             router.push('/login');
           }}
           tabIndex={0}

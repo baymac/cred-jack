@@ -1,6 +1,6 @@
 import React from 'react';
+import CredJack from '../components/CredJack/CredJack';
 import CreateUser from '../components/CreateUser/CreateUser';
-import UserInfo from '../components/UserInfo/UserInfo';
 import HomeLayout from '../layouts/HomeLayout';
 import useUser from '../lib/useUser';
 
@@ -12,8 +12,7 @@ export default function Home() {
 
   return (
     <HomeLayout>
-      {!user?.existing_user && <CreateUser />}
-      {user?.existing_user && <UserInfo />}
+      {!user?.existing_user ? <CreateUser /> : <CredJack />}
     </HomeLayout>
   );
 }

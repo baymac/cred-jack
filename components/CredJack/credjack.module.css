@@ -1,0 +1,155 @@
+.heading {
+  text-align: center;
+  margin-bottom: var(--mb-2);
+}
+
+.card,
+.card_red {
+  height: 75px;
+  width: 50px;
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card_red {
+  color: red;
+}
+
+.card {
+  color: black;
+}
+
+.cards {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--mb-1);
+}
+
+.input_bet {
+  display: flex;
+  justify-content: center;
+}
+
+.about__container {
+  gap: 2rem;
+  max-width: var(--big-screen-width);
+  margin: 4rem auto;
+}
+
+.board_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mb-1);
+}
+
+.input_box {
+  position: relative;
+  width: 100%;
+  margin-top: var(--mb-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.input_box input {
+  max-width: 300px;
+  width: 100%;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+}
+
+.input_box button {
+  max-width: 300px;
+  width: 100%;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+  background-color: var(--button-color);
+  color: var(--default-bw);
+  font-size: var(--h4-font-size);
+  cursor: pointer;
+  height: 52px; /* Hard coding height to match height with text during loading */
+}
+
+.game_action_buttons button {
+  max-width: 100px;
+  width: 100px;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+  background-color: var(--button-color);
+  color: var(--default-bw);
+  font-size: var(--small-font-size);
+  cursor: pointer;
+  height: 52px;
+}
+
+.place_bet_form {
+  display: flex;
+  flex-direction: column;
+}
+
+.bet_info {
+  margin-top: var(--mb-1);
+}
+
+.game_actions {
+  margin-top: var(--mb-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mb-1);
+}
+
+.play_again {
+  margin-top: var(--mb-1);
+}
+
+.play_again button {
+  max-width: 200px;
+  width: 200px;
+}
+
+.balance_info {
+  text-align: center;
+}
+
+.player_arena {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.balance {
+  margin-top: var(--mb-1);
+}
+
+.message {
+  margin-top: var(--mb-1);
+  color: var(--error-color);
+}
+
+@media (min-width: 600px) {
+  .input_box button {
+    height: 55px; /* Hard coding height to match height with text during loading */
+  }
+  .card,
+  .card_red {
+    height: 150px;
+    width: 100px;
+  }
+}

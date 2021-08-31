@@ -21,44 +21,17 @@ export default function Footer() {
                 <a className={footerStyles.footer__link}>Home</a>
               </Link>
             </li>
-            <li>
-              <Link href="/">
-                <a className={footerStyles.footer__link}>Home</a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/">
-                <a className={footerStyles.footer__link}>Home</a>
-              </Link>
-            </li>
           </ul>
           <ul className={footerStyles.footer__links_2}>
             <li>
-              <Link href="/">
-                <a className={footerStyles.footer__link}>Home</a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/">
-                <a className={footerStyles.footer__link}>Home</a>
+              <Link href="/about">
+                <a className={footerStyles.footer__link}>About</a>
               </Link>
             </li>
           </ul>
           <div className={footerStyles.footer__social}>
             <a
-              href="https://github.com/baymac"
-              target="_blank"
-              rel="noreferrer"
-              className={cn(
-                footerStyles.footer__social_icon,
-                footerStyles.footer__social_icon_gh
-              )}
-              aria-label="github"
-            >
-              <UilGithub alt="github" />
-            </a>
-            <a
-              href="https://github.com/baymac"
+              href="https://github.com/baymac/cred-coin"
               target="_blank"
               rel="noreferrer"
               className={cn(

@@ -39,6 +39,16 @@ export default function UserInfo() {
               <b>Solana Address:</b> {user.sol_addr}
             </p>
           </div>
+          <div className={styles.item}>
+            <p>
+              <b>Cred Coins Balance:</b> {user.coins}
+            </p>
+          </div>
+          <div className={styles.item}>
+            <p>
+              <b>Trust Score:</b> {user.trust_score}
+            </p>
+          </div>
         </div>
       </div>
     </section>
