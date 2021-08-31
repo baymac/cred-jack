@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { applySession } from 'next-iron-session';
+import addSolAddr from '../../lib/addSolAddr';
 
 interface IUserResponse {
   last_name: string;
@@ -45,7 +46,7 @@ export default async function createUser(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { first_name, last_name, email, sol_addr } = req.body;
+  const { first_name, last_name, email, sol_addr, phone } = req.body;
   await applySession(req, res, {
     password: process.env.SESSION_PASSWORD,
     cookieName: 'id',
@@ -61,24 +62,27 @@ export default async function createUser(
     email,
     access_token
   );
-  //@ts-ignore
-  var user = { ...req.session.get('user') };
-  if (createUserResp.success) {
-    user = {
-      ...user,
-      first_name,
-      last_name,
-      email,
-      sol_addr,
-      existing_user: true,
-    };
-  }
-  //@ts-ignore
-  req.session.set('user', {
+  const addSolAddrResp = await addSolAddr({ phone, sol_addr });
+  if (!addSolAddrResp.error) {
     //@ts-ignore
-    ...user,
-  });
-  //@ts-ignore
-  await req.session.save();
+    var user = { ...req.session.get('user') };
+    if (createUserResp.success) {
+      user = {
+        ...user,
+        first_name,
+        last_name,
+        email,
+        sol_addr,
+        existing_user: true,
+      };
+    }
+    //@ts-ignore
+    req.session.set('user', {
+      //@ts-ignore
+      ...user,
+    });
+    //@ts-ignore
+    await req.session.save();
+  }
   res.json(user);
 }

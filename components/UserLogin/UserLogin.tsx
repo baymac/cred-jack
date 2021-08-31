@@ -73,7 +73,7 @@ export default function UserLogin() {
         await fetchJson('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ otp: data.otp, token }),
+          body: JSON.stringify({ otp: data.otp, token, phone: data.phone }),
         })
       );
 

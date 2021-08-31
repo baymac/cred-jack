@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { applySession } from 'next-iron-session';
+import getSolAddr from '../../lib/getSolAddr';
 
 export interface IVerifyOtpResponse {
   access_token: string;
@@ -67,10 +68,15 @@ const getUserProfile = async ({
 };
 
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
-  const { otp, token } = req.body;
+  const { otp, token, phone } = req.body;
   const result = await verifyOtp({ otp, token });
   const access_token = result.access_token;
   const user = await getUserProfile({ access_token });
+  var sol_addr = undefined;
+  if (user.existing_user) {
+    const getSolAddrResp = await getSolAddr(phone);
+    sol_addr = getSolAddrResp.sol_addr;
+  }
   await applySession(req, res, {
     password: process.env.SESSION_PASSWORD,
     cookieName: 'id',
@@ -85,7 +91,12 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     }; Path='/'; SameSite=Lax; Max-Age=${15 * 24 * 3600}`
   );
   //@ts-ignore
-  req.session.set('user', { ...user, isLoggedIn: true, access_token });
+  req.session.set('user', {
+    ...user,
+    isLoggedIn: true,
+    access_token,
+    sol_addr: sol_addr,
+  });
   //@ts-ignore
   await req.session.save();
   res.json(user);

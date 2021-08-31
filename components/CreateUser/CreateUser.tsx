@@ -75,7 +75,7 @@ export default function CreateUser() {
     <>
       <section
         className={cn(rootStyles.section, styles.about__section)}
-        id="userCreate"
+        id="user-create"
       >
         <div
           className={cn(
