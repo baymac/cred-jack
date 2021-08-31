@@ -88,6 +88,7 @@ export default function UserLogin() {
 
   return (
     <LoginLayout>
+      <h1 className={styles.heading}>Welcome to CredJack</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.input_box}>
           <input

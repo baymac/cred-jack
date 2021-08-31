@@ -1,31 +1,10 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.header .thanks_message {
-  color: var(--title-color);
-  text-align: center;
-}
-
 .clickable {
   cursor: pointer;
 }
 
-.description {
+.heading {
   color: var(--text-color);
-  margin: var(--mb-0-5) var(--mb-1);
   text-align: center;
-  display: inline-block;
   max-width: 300px;
 }
 
@@ -134,12 +113,8 @@
     display: none;
   }
 
-  .header {
-    flex-direction: row;
-  }
-
-  .email_icon {
-    margin-left: var(--mb-0-5);
+  .heading {
+    margin-left: 1rem;
   }
 
   .reset_input_box button,
