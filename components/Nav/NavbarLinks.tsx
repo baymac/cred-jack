@@ -67,6 +67,7 @@ export default function NavBarLinks() {
             );
             setNavBarOpen(false);
             router.push('/login');
+            window.localStorage.removeItem('paymentKey');
           }}
           tabIndex={0}
         >

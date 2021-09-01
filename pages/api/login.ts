@@ -68,7 +68,8 @@ export const getUserProfile = async ({
 };
 
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
-  const { otp, token, phone } = req.body;
+  const { otp, token, phone } =
+    typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
   const result = await verifyOtp({ otp, token });
   const access_token = result.access_token;
   const user = await getUserProfile({ access_token });

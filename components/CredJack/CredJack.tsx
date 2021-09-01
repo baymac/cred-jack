@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import fetchJson from '../../lib/fetchJson';
 import useUser from '../../lib/useUser';
 import rootStyles from '../../styles/root.module.css';
@@ -41,6 +41,12 @@ const generateDeck = (): TDeck => {
 
 export default function CredJack() {
   const { user, mutateUser } = useUser();
+
+  useEffect(() => {
+    if (user?.sol_addr) {
+      window.localStorage.setItem('paymentKey', user.sol_addr);
+    }
+  }, []);
 
   const router = useRouter();
 

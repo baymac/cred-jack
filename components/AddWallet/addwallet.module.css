@@ -1,0 +1,36 @@
+.about__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: var(--big-screen-width);
+  margin: 4rem auto;
+}
+
+.input_box {
+  position: relative;
+  width: 100%;
+  margin-top: var(--mb-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.input_box button {
+  max-width: 300px;
+  width: 100%;
+  border: 1px solid var(--button-hover-color);
+  padding: 1rem;
+  background-color: var(--button-color);
+  color: var(--default-bw);
+  font-size: var(--h4-font-size);
+  cursor: pointer;
+  height: 52px; /* Hard coding height to match height with text during loading */
+}
+
+@media (min-width: 600px) {
+  .input_box button {
+    height: 55px; /* Hard coding height to match height with text during loading */
+  }
+}

@@ -47,7 +47,7 @@ export default async function createUser(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { first_name, last_name, email, sol_addr, phone } = req.body;
+  const { first_name, last_name, email, sol_addr } = req.body;
   await applySession(req, res, {
     password: process.env.SESSION_PASSWORD,
     cookieName: 'id',
