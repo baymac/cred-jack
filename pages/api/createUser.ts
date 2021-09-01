@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { applySession } from 'next-iron-session';
 import addSolAddr from '../../lib/addSolAddr';
+import { getUserProfile } from './login';
 
 interface IUserResponse {
   last_name: string;
@@ -62,20 +63,13 @@ export default async function createUser(
     email,
     access_token
   );
+  //@ts-ignore
+  var user = { ...req.session.get('user') };
+  if (createUserResp.success) {
+    user = await getUserProfile({ access_token });
+  }
   const addSolAddrResp = await addSolAddr({ phone, sol_addr });
   if (!addSolAddrResp.error) {
-    //@ts-ignore
-    var user = { ...req.session.get('user') };
-    if (createUserResp.success) {
-      user = {
-        ...user,
-        first_name,
-        last_name,
-        email,
-        sol_addr,
-        existing_user: true,
-      };
-    }
     //@ts-ignore
     req.session.set('user', {
       //@ts-ignore

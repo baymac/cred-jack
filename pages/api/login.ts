@@ -48,7 +48,7 @@ interface INonExistingUser {
   phone: number;
 }
 
-const getUserProfile = async ({
+export const getUserProfile = async ({
   access_token,
 }): Promise<IUserResponse | INonExistingUser> => {
   const myHeaders = new Headers();
