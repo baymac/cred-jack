@@ -209,7 +209,7 @@ export default function CredJack() {
             message = `${user.first_name} wins. You won ${currentBet} sol.`;
           } else {
             updatedWallet += currentBet;
-            message = 'Push.';
+            message = 'Stand Off! Select Play Again to place another bet.';
           }
 
           setDeck(updatedDeck);
@@ -221,7 +221,7 @@ export default function CredJack() {
         }
       }
     } else {
-      setMessage('Game over! Please start a new game.');
+      setMessage('Game over! Select Play Again to place another bet.');
     }
   };
 
