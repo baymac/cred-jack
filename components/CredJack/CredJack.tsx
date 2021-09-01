@@ -6,6 +6,8 @@ import rootStyles from '../../styles/root.module.css';
 import ButtonLoading from '../ButtonLoading/ButtonLoading';
 import styles from './credjack.module.css';
 
+import { useRouter } from 'next/router';
+
 interface Card {
   number: number;
   suit: string;
@@ -39,6 +41,8 @@ const generateDeck = (): TDeck => {
 
 export default function CredJack() {
   const { user, mutateUser } = useUser();
+
+  const router = useRouter();
 
   const [dealer, setDealer] = useState(null);
   const [deck, setDeck] = useState(generateDeck());
@@ -270,10 +274,27 @@ export default function CredJack() {
             <div className={styles.input_box}>
               <button
                 onClick={() => {
-                  startGame();
+                  if (user?.sol_addr) {
+                    startGame();
+                  }
                 }}
+                style={!user?.sol_addr ? { cursor: 'no-drop' } : {}}
               >
                 Start Game
+              </button>
+            </div>
+            {!user?.sol_addr && (
+              <div className={cn(styles.message, styles.input_bet)}>
+                Create a Solana wallet to start the game
+              </div>
+            )}
+            <div className={styles.input_box}>
+              <button
+                onClick={() => {
+                  router.push('getsol');
+                }}
+              >
+                {!user?.sol_addr ? 'Create Wallet' : 'Get Solana'}
               </button>
             </div>
           </>
@@ -390,6 +411,7 @@ export default function CredJack() {
         <div className={styles.balance_info}>
           <p className={styles.balance}>Balance: {wallet} cred coins</p>
           <p className={styles.balance}>Trust Score: {user.trust_score}</p>
+          <p className={styles.balance}>Phone: {user.phone}</p>
         </div>
       </div>
     </section>
