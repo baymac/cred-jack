@@ -84,6 +84,11 @@
   height: 52px; /* Hard coding height to match height with text during loading */
 }
 
+.button_disable button {
+  background-color: var(--button-color-disabled);
+  cursor: no-drop;
+}
+
 .game_action_buttons button {
   max-width: 100px;
   width: 100px;

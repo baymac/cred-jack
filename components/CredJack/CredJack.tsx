@@ -1,7 +1,9 @@
 import cn from 'classnames';
 import { useState } from 'react';
+import fetchJson from '../../lib/fetchJson';
 import useUser from '../../lib/useUser';
 import rootStyles from '../../styles/root.module.css';
+import ButtonLoading from '../ButtonLoading/ButtonLoading';
 import styles from './credjack.module.css';
 
 interface Card {
@@ -36,7 +38,7 @@ const generateDeck = (): TDeck => {
 };
 
 export default function CredJack() {
-  const { user } = useUser();
+  const { user, mutateUser } = useUser();
 
   const [dealer, setDealer] = useState(null);
   const [deck, setDeck] = useState(generateDeck());
@@ -47,6 +49,7 @@ export default function CredJack() {
   const [gameStates, setGameState] = useState(States.idle);
   const [gameOver, setGameOver] = useState(null);
   const [message, setMessage] = useState(null);
+  const [placingBet, setPlacingBet] = useState(false);
 
   const dealCards = (deck) => {
     const playerCard1 = getRandomCard(deck);
@@ -94,7 +97,7 @@ export default function CredJack() {
     return { randomCard, updatedDeck: deck };
   };
 
-  const placeBet = () => {
+  const placeBet = async () => {
     const updatedCurrentBet = parseInt(input);
     if (updatedCurrentBet > wallet) {
       setMessage('Insufficient funds to bet that amount.');
@@ -102,8 +105,15 @@ export default function CredJack() {
       setMessage('Please bet whole numbers only.');
     } else {
       // Deduct current bet from wallet
-      const updatedWallet = wallet - updatedCurrentBet;
-      setWallet(updatedWallet);
+      setPlacingBet(true);
+      mutateUser(
+        await fetchJson('/api/spendCoin', {
+          method: 'POST',
+          body: JSON.stringify({ coins: updatedCurrentBet }),
+        })
+      );
+      setPlacingBet(false);
+      setWallet(wallet - updatedCurrentBet);
       setInput('');
       setCurrentBet(updatedCurrentBet);
       setMessage(null);
@@ -348,13 +358,18 @@ export default function CredJack() {
                         onChange={inputChange}
                       />
                     </div>
-                    <div className={styles.input_box}>
+                    <div
+                      className={cn(styles.input_box, {
+                        [styles.button_disable]: placingBet,
+                      })}
+                    >
                       <button
                         onClick={() => {
                           placeBet();
                         }}
+                        disabled={placingBet}
                       >
-                        Place Bet
+                        {placingBet ? <ButtonLoading /> : 'Place Bet'}
                       </button>
                     </div>
                   </>

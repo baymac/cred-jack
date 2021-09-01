@@ -74,6 +74,8 @@ export default async function createUser(
     req.session.set('user', {
       //@ts-ignore
       ...user,
+      access_token,
+      sol_addr,
     });
     //@ts-ignore
     await req.session.save();

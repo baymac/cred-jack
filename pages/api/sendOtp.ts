@@ -6,7 +6,7 @@ export interface IGenerateOtpResponse {
 
 const generateOtp = async ({ phone }): Promise<IGenerateOtpResponse> => {
   const myHeaders = new Headers();
-  myHeaders.append('credaccess-secret-key', '6bb90d09c8ea279ffc87b364944b5ae0');
+  myHeaders.append('credaccess-secret-key', process.env.CRED_SECRET);
   myHeaders.append('Content-Type', 'application/json');
 
   const raw = JSON.stringify({
