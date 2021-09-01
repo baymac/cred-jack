@@ -25,14 +25,12 @@ const CreateUserSchema = yup.object().shape({
       'Last Name can only contain characters without space'
     ),
   email: yup.string().email().required('Email is required'),
-  sol_addr: yup.string().required('Solana Address is required'),
 });
 
 export interface ICreateUserRequest {
   first_name: string;
   last_name: string;
   email: string;
-  sol_addr: string;
   phone: string;
 }
 
@@ -61,7 +59,6 @@ export default function CreateUser() {
           last_name: data.last_name,
           email: data.email,
           phone: data.phone,
-          sol_addr: data.sol_addr,
         }),
       })
     );
@@ -135,19 +132,6 @@ export default function CreateUser() {
               />
               {errors.email && (
                 <p className={styles.error_message}>{errors.email.message}</p>
-              )}
-            </div>
-            <div className={styles.input_box}>
-              <input
-                name="sol_addr"
-                type="text"
-                placeholder="Solana Address"
-                {...register('sol_addr')}
-              />
-              {errors.sol_addr && (
-                <p className={styles.error_message}>
-                  {errors.sol_addr.message}
-                </p>
               )}
             </div>
 
