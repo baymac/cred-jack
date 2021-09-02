@@ -7,6 +7,8 @@ import ButtonLoading from '../ButtonLoading/ButtonLoading';
 import styles from './credjack.module.css';
 
 import { useRouter } from 'next/router';
+import AddWallet from '../AddWallet/AddWallet';
+import { getLocalStorageKeypair } from '../../lib/utils';
 
 interface Card {
   number: number;
@@ -265,6 +267,10 @@ export default function CredJack() {
     setMessage(null);
   };
 
+  const getBalance = () => {};
+
+  console.log(getLocalStorageKeypair('paymentKey'));
+
   return (
     <section
       className={cn(rootStyles.section, styles.about__section)}
@@ -290,11 +296,14 @@ export default function CredJack() {
               </button>
             </div>
             {!user?.sol_addr && (
-              <div className={cn(styles.message, styles.input_bet)}>
-                Create a Solana wallet to start the game
-              </div>
+              <>
+                <div className={cn(styles.message, styles.input_bet)}>
+                  Create a Solana wallet to start the game
+                </div>
+                <AddWallet />
+              </>
             )}
-            <div className={styles.input_box}>
+            {/* <div className={styles.input_box}>
               <button
                 onClick={() => {
                   router.push('getsol');
@@ -302,7 +311,7 @@ export default function CredJack() {
               >
                 {!user?.sol_addr ? 'Create Wallet' : 'Get Solana'}
               </button>
-            </div>
+            </div> */}
           </>
         )}
         {gameStates === States.progress && (
@@ -418,6 +427,16 @@ export default function CredJack() {
           <p className={styles.balance}>Balance: {wallet} cred coins</p>
           <p className={styles.balance}>Trust Score: {user.trust_score}</p>
           <p className={styles.balance}>Phone: {user.phone}</p>
+          <p className={styles.balance}>
+            Solana Address: &nbsp;
+            {/* @ts-ignore */}
+            {getLocalStorageKeypair('paymentKey').publicKey.toBase58()}
+          </p>
+          <p className={styles.balance}>
+            Solana Balance: &nbsp;
+            {/* @ts-ignore */}
+            {getBalance()}
+          </p>
         </div>
       </div>
     </section>

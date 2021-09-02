@@ -29,6 +29,11 @@
   height: 52px; /* Hard coding height to match height with text during loading */
 }
 
+.button_disable button {
+  background-color: var(--button-color-disabled);
+  cursor: no-drop;
+}
+
 @media (min-width: 600px) {
   .input_box button {
     height: 55px; /* Hard coding height to match height with text during loading */
