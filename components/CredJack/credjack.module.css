@@ -128,7 +128,10 @@
 }
 
 .balance_info {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .player_arena {
@@ -141,6 +144,9 @@
 
 .balance {
   margin-top: var(--mb-1);
+  word-wrap: break-word;
+  width: 300px;
+  text-align: center;
 }
 
 .message {

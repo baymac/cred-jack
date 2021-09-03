@@ -2,13 +2,16 @@ import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import fetchJson from '../../lib/fetchJson';
 import useUser from '../../lib/useUser';
+import {
+  getAccountFromLocalStorage,
+  getBalance,
+  getConnection,
+  requestAirDrops,
+} from '../../lib/utils';
 import rootStyles from '../../styles/root.module.css';
+import AddWallet from '../AddWallet/AddWallet';
 import ButtonLoading from '../ButtonLoading/ButtonLoading';
 import styles from './credjack.module.css';
-
-import { useRouter } from 'next/router';
-import AddWallet from '../AddWallet/AddWallet';
-import { getLocalStorageKeypair } from '../../lib/utils';
 
 interface Card {
   number: number;
@@ -50,8 +53,6 @@ export default function CredJack() {
     }
   }, []);
 
-  const router = useRouter();
-
   const [dealer, setDealer] = useState(null);
   const [deck, setDeck] = useState(generateDeck());
   const [player, setPlayer] = useState(null);
@@ -62,6 +63,25 @@ export default function CredJack() {
   const [gameOver, setGameOver] = useState(null);
   const [message, setMessage] = useState(null);
   const [placingBet, setPlacingBet] = useState(false);
+  const [solBalance, setSolBalance] = useState(null);
+  const [fundingUserProgress, setFundingUserProgress] = useState(false);
+
+  const updateBalance = async () => {
+    const newBalance = await getBalance(
+      getAccountFromLocalStorage('paymentKey').publicKey
+    );
+    setSolBalance(newBalance);
+  };
+
+  useEffect(() => {
+    updateBalance();
+    return () => {
+      mutateUser({
+        ...user,
+        coins: wallet,
+      });
+    };
+  }, []);
 
   const dealCards = (deck) => {
     const playerCard1 = getRandomCard(deck);
@@ -95,10 +115,12 @@ export default function CredJack() {
       setPlayer(updatedPlayer);
       setDealer(updatedDealer);
       setCurrentBet(null);
-      setGameOver(false);
+      setGameOver(null);
       setMessage(null);
     } else {
-      setMessage('You are broke. Buy more Solana using cred coins.');
+      setMessage(
+        'You are broke. Pay more credit card uses to earn cred coins.'
+      );
     }
   };
 
@@ -116,14 +138,11 @@ export default function CredJack() {
     } else if (updatedCurrentBet % 1 !== 0) {
       setMessage('Please bet whole numbers only.');
     } else {
-      // Deduct current bet from wallet
       setPlacingBet(true);
-      mutateUser(
-        await fetchJson('/api/spendCoin', {
-          method: 'POST',
-          body: JSON.stringify({ coins: updatedCurrentBet }),
-        })
-      );
+      const resp = await fetchJson('/api/spendCoin', {
+        method: 'POST',
+        body: JSON.stringify({ coins: updatedCurrentBet }),
+      });
       setPlacingBet(false);
       setWallet(wallet - updatedCurrentBet);
       setInput('');
@@ -147,7 +166,7 @@ export default function CredJack() {
           }));
           setGameOver(true);
           setCurrentBet(null);
-          setMessage(`Dealer wins. You lost ${currentBet} sol`);
+          setMessage(`Dealer wins. You lost ${currentBet} cred coins`);
         } else {
           setPlayer((prev) => ({
             ...prev,
@@ -192,6 +211,9 @@ export default function CredJack() {
     }, 0);
   };
 
+  const calculateWinnings = () =>
+    Math.round(currentBet * (user.trust_score / 100));
+
   const stand = () => {
     if (!gameOver) {
       if (!currentBet) {
@@ -215,22 +237,27 @@ export default function CredJack() {
         if (localDealer.count > 21) {
           setDeck(updatedDeck);
           setDealer(localDealer);
-          setWallet(wallet + currentBet * 2);
+          setWallet(wallet);
           setGameOver(true);
           setCurrentBet(null);
-          setMessage(`${user.first_name} wins. You won ${currentBet} sol.`);
+          setMessage(
+            `${user.first_name} wins. You won ${calculateWinnings()} lamports.`
+          );
+          fundUser();
         } else {
           const winner = getWinner(localDealer, player);
           let updatedWallet = wallet;
           let message;
 
           if (winner === 'dealer') {
-            message = `Dealer wins. You lost ${currentBet} sol.`;
+            message = `Dealer wins. You lost ${currentBet} cred coins.`;
           } else if (winner === 'player') {
-            updatedWallet += currentBet * 2;
-            message = `${user.first_name} wins. You won ${currentBet} sol.`;
+            message = `${
+              user.first_name
+            } wins. You won ${calculateWinnings()} lamports.`;
+            fundUser();
           } else {
-            updatedWallet += currentBet;
+            // updatedWallet += currentBet;
             message = 'Stand Off! Select Play Again to place another bet.';
           }
 
@@ -267,9 +294,16 @@ export default function CredJack() {
     setMessage(null);
   };
 
-  const getBalance = () => {};
-
-  console.log(getLocalStorageKeypair('paymentKey'));
+  const fundUser = () => {
+    setFundingUserProgress(true);
+    requestAirDrops(
+      getConnection().connection,
+      getAccountFromLocalStorage('paymentKey'),
+      calculateWinnings()
+    );
+    setFundingUserProgress(false);
+    updateBalance();
+  };
 
   return (
     <section
@@ -316,53 +350,57 @@ export default function CredJack() {
         )}
         {gameStates === States.progress && (
           <>
-            <div className={styles.board_wrapper}>
-              <div className={styles.board}>
-                <p>Dealer's Hand ({dealer.count})</p>
-                <div className={styles.cards}>
-                  {dealer.cards.map((card, i) => {
-                    return (
-                      <Card key={i} number={card.number} suit={card.suit} />
-                    );
-                  })}
+            {((gameOver === null && currentBet !== null) || gameOver) && (
+              <div className={styles.board_wrapper}>
+                <div className={styles.board}>
+                  <p>Dealer's Hand ({dealer.count})</p>
+                  <div className={styles.cards}>
+                    {dealer.cards.map((card, i) => {
+                      return (
+                        <Card key={i} number={card.number} suit={card.suit} />
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className={styles.board}>
+                  <div className={styles.cards}>
+                    {player.cards.map((card, i) => (
+                      <Card
+                        key={`${i}${card.suit}`}
+                        number={card.number}
+                        suit={card.suit}
+                      />
+                    ))}
+                  </div>
+                  <p>
+                    {user.first_name}'s Hand ({player.count})
+                  </p>
                 </div>
               </div>
-              <div className={styles.board}>
-                <div className={styles.cards}>
-                  {player.cards.map((card, i) => (
-                    <Card
-                      key={`${i}${card.suit}`}
-                      number={card.number}
-                      suit={card.suit}
-                    />
-                  ))}
-                </div>
-                <p>
-                  {user.first_name}'s Hand ({player.count})
-                </p>
-              </div>
-            </div>
+            )}
             <div className={styles.player_arena}>
-              <div className={styles.game_actions}>
-                <div className={styles.game_action_buttons}>
-                  <button
-                    onClick={() => {
-                      hit();
-                    }}
-                  >
-                    Hit
-                  </button>
+              {((gameOver === null && currentBet !== null) || gameOver) && (
+                <div className={styles.game_actions}>
+                  <div className={styles.game_action_buttons}>
+                    <button
+                      onClick={() => {
+                        hit();
+                      }}
+                    >
+                      Hit
+                    </button>
+                  </div>
+                  <div className={styles.game_action_buttons}>
+                    <button
+                      onClick={() => {
+                        stand();
+                      }}
+                    >
+                      Stand
+                    </button>
+                  </div>
                 </div>
-                <div className={styles.game_action_buttons}>
-                  <button
-                    onClick={() => {
-                      stand();
-                    }}
-                  >
-                    Stand
-                  </button>
-                </div>
-              </div>
+              )}
               {currentBet && (
                 <div className={styles.bet_info}>
                   Your current bet is {currentBet}
@@ -430,12 +468,12 @@ export default function CredJack() {
           <p className={styles.balance}>
             Solana Address: &nbsp;
             {/* @ts-ignore */}
-            {getLocalStorageKeypair('paymentKey').publicKey.toBase58()}
+            {getAccountFromLocalStorage('paymentKey').publicKey.toBase58()}
           </p>
           <p className={styles.balance}>
             Solana Balance: &nbsp;
             {/* @ts-ignore */}
-            {getBalance()}
+            {JSON.stringify(solBalance) ?? 'fetching'}
           </p>
         </div>
       </div>
