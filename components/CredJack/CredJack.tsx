@@ -69,12 +69,14 @@ export default function CredJack() {
   const [fundingUserProgress, setFundingUserProgress] = useState(null);
 
   const updateBalance = async () => {
-    const newBalance = await getBalance(
-      getAccountFromLocalStorage('paymentKey').publicKey
-    );
-    if (newBalance > solBalance) {
-      setFundingUserProgress(null);
-      setSolBalance(newBalance);
+    if (window.localStorage.getItem('paymentKey')) {
+      const newBalance = await getBalance(
+        getAccountFromLocalStorage('paymentKey').publicKey
+      );
+      if (newBalance > solBalance) {
+        setFundingUserProgress(null);
+        setSolBalance(newBalance);
+      }
     }
   };
 
