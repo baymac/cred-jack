@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
+import { useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useInterval } from '../../hooks/useInterval';
 import fetchJson from '../../lib/fetchJson';
 import useUser from '../../lib/useUser';
@@ -69,26 +70,43 @@ export default function CredJack() {
   const [fundingUserProgress, setFundingUserProgress] = useState(null);
 
   const updateBalance = async () => {
-    const newBalance = await getBalance(
-      getAccountFromLocalStorage('paymentKey').publicKey
-    );
-    if (newBalance > solBalance) {
-      setFundingUserProgress(null);
-      setSolBalance(newBalance);
+    if (window.localStorage.getItem('paymentKey')) {
+      var newBalance = await getBalance(
+        getAccountFromLocalStorage('paymentKey').publicKey,
+        true
+      );
+      if (newBalance !== solBalance + calculateWinnings()) {
+        requestAirDrops(
+          getConnection().connection,
+          getAccountFromLocalStorage('paymentKey'),
+          calculateWinnings()
+        );
+      }
+      newBalance = await getBalance(
+        getAccountFromLocalStorage('paymentKey').publicKey
+      );
+      console.log(`New Balance: ${newBalance}`);
+      console.log(`Current Balance: ${solBalance}`);
+      console.log(`Winnings: ${calculateWinnings()}`);
+      if (newBalance === solBalance + calculateWinnings()) {
+        setFundingUserProgress(null);
+        setSolBalance(newBalance);
+        setCurrentBet(null);
+      }
     }
   };
 
   useInterval(updateBalance, fundingUserProgress);
 
   useEffect(() => {
-    updateBalance();
-    return () => {
-      mutateUser({
-        ...user,
-        coins: wallet,
-      });
-    };
-  }, []);
+    if (user.sol_addr) {
+      getBalance(getAccountFromLocalStorage('paymentKey').publicKey, true).then(
+        (bal) => {
+          setSolBalance(bal);
+        }
+      );
+    }
+  }, [user]);
 
   const dealCards = (deck) => {
     const playerCard1 = getRandomCard(deck);
@@ -172,7 +190,6 @@ export default function CredJack() {
             count: updatedCount,
           }));
           setGameOver(true);
-          setCurrentBet(null);
           setMessage(`Dealer wins. You lost ${currentBet} cred coins`);
         } else {
           setPlayer((prev) => ({
@@ -246,11 +263,10 @@ export default function CredJack() {
           setDealer(localDealer);
           setWallet(wallet);
           setGameOver(true);
-          setCurrentBet(null);
           setMessage(
             `${user.first_name} wins. You won ${calculateWinnings()} lamports.`
           );
-          fundUser();
+          fundUserWithWinnings();
         } else {
           const winner = getWinner(localDealer, player);
           let updatedWallet = wallet;
@@ -262,9 +278,8 @@ export default function CredJack() {
             message = `${
               user.first_name
             } wins. You won ${calculateWinnings()} lamports.`;
-            fundUser();
+            fundUserWithWinnings();
           } else {
-            // updatedWallet += currentBet;
             message = 'Stand Off! Select Play Again to place another bet.';
           }
 
@@ -272,7 +287,6 @@ export default function CredJack() {
           setDealer(localDealer);
           setWallet(updatedWallet);
           setGameOver(true);
-          setCurrentBet(null);
           setMessage(message);
         }
       }
@@ -299,16 +313,11 @@ export default function CredJack() {
   const endGame = () => {
     setGameState(States.idle);
     setMessage(null);
+    setInput('');
   };
 
-  const fundUser = () => {
+  const fundUserWithWinnings = () => {
     setFundingUserProgress(2000);
-    requestAirDrops(
-      getConnection().connection,
-      getAccountFromLocalStorage('paymentKey'),
-      calculateWinnings()
-    );
-    // updateBalance();
   };
 
   return (
@@ -403,14 +412,19 @@ export default function CredJack() {
                   Your current bet is {currentBet}
                 </div>
               )}
-              {gameOver && (
+              {gameOver && !fundingUserProgress && (
                 <div
-                  className={cn(styles.game_action_buttons, styles.play_again)}
+                  className={cn(styles.game_action_buttons, styles.play_again, {
+                    [styles.button_disable]: fundingUserProgress,
+                  })}
                 >
                   <button
                     onClick={() => {
-                      startGame();
+                      if (!fundingUserProgress) {
+                        startGame();
+                      }
                     }}
+                    disabled={fundingUserProgress}
                   >
                     Play Again
                   </button>
@@ -465,9 +479,9 @@ export default function CredJack() {
           <p className={styles.balance}>
             Solana Address: &nbsp;
             {/* @ts-ignore */}
-            {getAccountFromLocalStorage('paymentKey').publicKey.toBase58()}
+            {user.sol_addr ?? 'null'}
           </p>
-          <p className={styles.balance}>
+          <div className={styles.balance}>
             <div
               style={{
                 display: 'inline-flex',
@@ -477,9 +491,13 @@ export default function CredJack() {
             >
               Solana Balance: &nbsp;
               {/* @ts-ignore */}
-              {fundingUserProgress ? <Loading /> : JSON.stringify(solBalance)}
+              {fundingUserProgress ? (
+                <Loading />
+              ) : (
+                `${JSON.stringify(solBalance)} lamports`
+              )}
             </div>
-          </p>
+          </div>
         </div>
       </div>
     </section>

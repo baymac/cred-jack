@@ -125,8 +125,8 @@ export default function Nav() {
                     await fetchJson('/api/logout', { method: 'POST' }),
                     false
                   );
-                  router.push('/login');
                   window.localStorage.removeItem('paymentKey');
+                  // router.push('/login');
                 },
                 'aria-label': 'sign-out-button',
                 title: 'Sign out',
