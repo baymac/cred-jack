@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useInterval } from '../../hooks/useInterval';
 import fetchJson from '../../lib/fetchJson';
 import useUser from '../../lib/useUser';
@@ -73,8 +73,10 @@ export default function CredJack() {
       const newBalance = await getBalance(
         getAccountFromLocalStorage('paymentKey').publicKey
       );
-      if (newBalance > solBalance) {
+      if (newBalance !== solBalance + calculateWinnings()) {
         setFundingUserProgress(null);
+        setSolBalance(newBalance);
+      } else if (solBalance === null && newBalance !== null) {
         setSolBalance(newBalance);
       }
     }
@@ -83,14 +85,10 @@ export default function CredJack() {
   useInterval(updateBalance, fundingUserProgress);
 
   useEffect(() => {
-    updateBalance();
-    return () => {
-      mutateUser({
-        ...user,
-        coins: wallet,
-      });
-    };
-  }, []);
+    if (user.sol_addr) {
+      updateBalance();
+    }
+  }, [user]);
 
   const dealCards = (deck) => {
     const playerCard1 = getRandomCard(deck);
@@ -220,8 +218,10 @@ export default function CredJack() {
     }, 0);
   };
 
-  const calculateWinnings = () =>
-    Math.round(currentBet * (user.trust_score / 100));
+  const calculateWinnings = useCallback(
+    () => Math.round(currentBet * (user.trust_score / 100)),
+    [currentBet, user]
+  );
 
   const stand = () => {
     if (!gameOver) {
@@ -252,7 +252,7 @@ export default function CredJack() {
           setMessage(
             `${user.first_name} wins. You won ${calculateWinnings()} lamports.`
           );
-          fundUser();
+          fundUserWithWinnings();
         } else {
           const winner = getWinner(localDealer, player);
           let updatedWallet = wallet;
@@ -264,7 +264,7 @@ export default function CredJack() {
             message = `${
               user.first_name
             } wins. You won ${calculateWinnings()} lamports.`;
-            fundUser();
+            fundUserWithWinnings();
           } else {
             // updatedWallet += currentBet;
             message = 'Stand Off! Select Play Again to place another bet.';
@@ -303,7 +303,7 @@ export default function CredJack() {
     setMessage(null);
   };
 
-  const fundUser = () => {
+  const fundUserWithWinnings = () => {
     setFundingUserProgress(2000);
     requestAirDrops(
       getConnection().connection,
@@ -405,14 +405,19 @@ export default function CredJack() {
                   Your current bet is {currentBet}
                 </div>
               )}
-              {gameOver && (
+              {gameOver && !fundingUserProgress && (
                 <div
-                  className={cn(styles.game_action_buttons, styles.play_again)}
+                  className={cn(styles.game_action_buttons, styles.play_again, {
+                    [styles.button_disable]: fundingUserProgress,
+                  })}
                 >
                   <button
                     onClick={() => {
-                      startGame();
+                      if (!fundingUserProgress) {
+                        startGame();
+                      }
                     }}
+                    disabled={fundingUserProgress}
                   >
                     Play Again
                   </button>
@@ -467,7 +472,7 @@ export default function CredJack() {
           <p className={styles.balance}>
             Solana Address: &nbsp;
             {/* @ts-ignore */}
-            {getAccountFromLocalStorage('paymentKey').publicKey.toBase58()}
+            {user.sol_addr ?? 'null'}
           </p>
           <p className={styles.balance}>
             <div
