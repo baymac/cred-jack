@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import { useRef } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useInterval } from '../../hooks/useInterval';
 import fetchJson from '../../lib/fetchJson';
@@ -73,9 +74,13 @@ export default function CredJack() {
       const newBalance = await getBalance(
         getAccountFromLocalStorage('paymentKey').publicKey
       );
-      if (newBalance !== solBalance + calculateWinnings()) {
+      console.log(newBalance);
+      console.log(solBalance);
+      console.log(calculateWinnings());
+      if (newBalance === solBalance + calculateWinnings()) {
         setFundingUserProgress(null);
         setSolBalance(newBalance);
+        setCurrentBet(null);
       } else if (solBalance === null && newBalance !== null) {
         setSolBalance(newBalance);
       }
@@ -172,7 +177,7 @@ export default function CredJack() {
             count: updatedCount,
           }));
           setGameOver(true);
-          setCurrentBet(null);
+          // setCurrentBet(null);
           setMessage(`Dealer wins. You lost ${currentBet} cred coins`);
         } else {
           setPlayer((prev) => ({
@@ -218,10 +223,8 @@ export default function CredJack() {
     }, 0);
   };
 
-  const calculateWinnings = useCallback(
-    () => Math.round(currentBet * (user.trust_score / 100)),
-    [currentBet, user]
-  );
+  const calculateWinnings = () =>
+    Math.round(currentBet * (user.trust_score / 100));
 
   const stand = () => {
     if (!gameOver) {
@@ -248,7 +251,7 @@ export default function CredJack() {
           setDealer(localDealer);
           setWallet(wallet);
           setGameOver(true);
-          setCurrentBet(null);
+          // setCurrentBet(null);
           setMessage(
             `${user.first_name} wins. You won ${calculateWinnings()} lamports.`
           );
@@ -274,7 +277,7 @@ export default function CredJack() {
           setDealer(localDealer);
           setWallet(updatedWallet);
           setGameOver(true);
-          setCurrentBet(null);
+          // setCurrentBet(null);
           setMessage(message);
         }
       }
@@ -301,6 +304,7 @@ export default function CredJack() {
   const endGame = () => {
     setGameState(States.idle);
     setMessage(null);
+    setInput('');
   };
 
   const fundUserWithWinnings = () => {
