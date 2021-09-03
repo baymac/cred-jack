@@ -75,11 +75,11 @@ export default function CredJack() {
         getAccountFromLocalStorage('paymentKey').publicKey,
         true
       );
-      if (newBalance !== solBalance + calculateWinnings()) {
+      if (newBalance < solBalance + calculateWinnings()) {
         requestAirDrops(
           getConnection().connection,
           getAccountFromLocalStorage('paymentKey'),
-          calculateWinnings()
+          solBalance + calculateWinnings() - newBalance
         );
       }
       newBalance = await getBalance(
