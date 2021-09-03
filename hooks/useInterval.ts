@@ -12,9 +12,12 @@ export const useInterval = (callback, delay) => {
       // @ts-ignore
       savedCallback.current();
     }
+    var id = null;
     if (delay !== null) {
-      const id = setInterval(tick, delay);
+      id = setInterval(tick, delay);
       return () => clearInterval(id);
+    } else {
+      clearInterval(id);
     }
   }, [delay]);
 };

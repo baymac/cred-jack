@@ -71,7 +71,18 @@ export default function CredJack() {
 
   const updateBalance = async () => {
     if (window.localStorage.getItem('paymentKey')) {
-      const newBalance = await getBalance(
+      var newBalance = await getBalance(
+        getAccountFromLocalStorage('paymentKey').publicKey,
+        true
+      );
+      if (newBalance !== solBalance + calculateWinnings()) {
+        requestAirDrops(
+          getConnection().connection,
+          getAccountFromLocalStorage('paymentKey'),
+          calculateWinnings()
+        );
+      }
+      newBalance = await getBalance(
         getAccountFromLocalStorage('paymentKey').publicKey
       );
       console.log(`New Balance: ${newBalance}`);
@@ -81,8 +92,6 @@ export default function CredJack() {
         setFundingUserProgress(null);
         setSolBalance(newBalance);
         setCurrentBet(null);
-      } else if (solBalance === null && newBalance !== null) {
-        setSolBalance(newBalance);
       }
     }
   };
@@ -91,7 +100,11 @@ export default function CredJack() {
 
   useEffect(() => {
     if (user.sol_addr) {
-      updateBalance();
+      getBalance(getAccountFromLocalStorage('paymentKey').publicKey).then(
+        (bal) => {
+          setSolBalance(bal);
+        }
+      );
     }
   }, [user]);
 
@@ -177,7 +190,6 @@ export default function CredJack() {
             count: updatedCount,
           }));
           setGameOver(true);
-          // setCurrentBet(null);
           setMessage(`Dealer wins. You lost ${currentBet} cred coins`);
         } else {
           setPlayer((prev) => ({
@@ -251,7 +263,6 @@ export default function CredJack() {
           setDealer(localDealer);
           setWallet(wallet);
           setGameOver(true);
-          // setCurrentBet(null);
           setMessage(
             `${user.first_name} wins. You won ${calculateWinnings()} lamports.`
           );
@@ -269,7 +280,6 @@ export default function CredJack() {
             } wins. You won ${calculateWinnings()} lamports.`;
             fundUserWithWinnings();
           } else {
-            // updatedWallet += currentBet;
             message = 'Stand Off! Select Play Again to place another bet.';
           }
 
@@ -277,7 +287,6 @@ export default function CredJack() {
           setDealer(localDealer);
           setWallet(updatedWallet);
           setGameOver(true);
-          // setCurrentBet(null);
           setMessage(message);
         }
       }
@@ -309,12 +318,6 @@ export default function CredJack() {
 
   const fundUserWithWinnings = () => {
     setFundingUserProgress(2000);
-    requestAirDrops(
-      getConnection().connection,
-      getAccountFromLocalStorage('paymentKey'),
-      calculateWinnings()
-    );
-    // updateBalance();
   };
 
   return (
@@ -478,7 +481,7 @@ export default function CredJack() {
             {/* @ts-ignore */}
             {user.sol_addr ?? 'null'}
           </p>
-          <p className={styles.balance}>
+          <div className={styles.balance}>
             <div
               style={{
                 display: 'inline-flex',
@@ -488,9 +491,13 @@ export default function CredJack() {
             >
               Solana Balance: &nbsp;
               {/* @ts-ignore */}
-              {fundingUserProgress ? <Loading /> : JSON.stringify(solBalance)}
+              {fundingUserProgress ? (
+                <Loading />
+              ) : (
+                `${JSON.stringify(solBalance)} lamports`
+              )}
             </div>
-          </p>
+          </div>
         </div>
       </div>
     </section>
