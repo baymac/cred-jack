@@ -39,7 +39,8 @@ export default async function spendCoin(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { coins } = JSON.parse(req.body);
+  const { coins } =
+    typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
   await applySession(req, res, {
     password: process.env.SESSION_PASSWORD,
     cookieName: 'id',

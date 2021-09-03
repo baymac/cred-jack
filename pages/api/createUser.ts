@@ -47,7 +47,7 @@ export default async function createUser(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { first_name, last_name, email, sol_addr, phone } = req.body;
+  const { first_name, last_name, email, sol_addr } = req.body;
   await applySession(req, res, {
     password: process.env.SESSION_PASSWORD,
     cookieName: 'id',
@@ -68,17 +68,14 @@ export default async function createUser(
   if (createUserResp.success) {
     user = await getUserProfile({ access_token });
   }
-  const addSolAddrResp = await addSolAddr({ phone, sol_addr });
-  if (!addSolAddrResp.error) {
+  //@ts-ignore
+  req.session.set('user', {
     //@ts-ignore
-    req.session.set('user', {
-      //@ts-ignore
-      ...user,
-      access_token,
-      sol_addr,
-    });
-    //@ts-ignore
-    await req.session.save();
-  }
+    ...user,
+    access_token,
+    sol_addr,
+  });
+  //@ts-ignore
+  await req.session.save();
   res.json(user);
 }

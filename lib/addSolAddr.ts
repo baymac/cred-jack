@@ -8,7 +8,7 @@ export interface IAddSolAddrRequest {
 
 export interface IAddSolAddrResponse extends IGenericAPIResponse {}
 
-export default async function getSolAddr({
+export default async function addSolAddr({
   phone,
   sol_addr,
 }: IAddSolAddrRequest): Promise<IAddSolAddrResponse> {

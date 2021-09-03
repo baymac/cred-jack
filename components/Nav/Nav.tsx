@@ -126,6 +126,7 @@ export default function Nav() {
                     false
                   );
                   router.push('/login');
+                  window.localStorage.removeItem('paymentKey');
                 },
                 'aria-label': 'sign-out-button',
                 title: 'Sign out',

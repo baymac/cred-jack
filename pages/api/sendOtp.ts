@@ -33,7 +33,8 @@ export default async function resend(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { phone } = JSON.parse(req.body);
+  const { phone } =
+    typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
   const result = await generateOtp({ phone });
   res.status(200).json({ error: false, token: result.token });
 }
