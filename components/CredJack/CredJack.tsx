@@ -100,7 +100,7 @@ export default function CredJack() {
 
   useEffect(() => {
     if (user.sol_addr) {
-      getBalance(getAccountFromLocalStorage('paymentKey').publicKey).then(
+      getBalance(getAccountFromLocalStorage('paymentKey').publicKey, true).then(
         (bal) => {
           setSolBalance(bal);
         }
