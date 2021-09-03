@@ -74,9 +74,9 @@ export default function CredJack() {
       const newBalance = await getBalance(
         getAccountFromLocalStorage('paymentKey').publicKey
       );
-      console.log(newBalance);
-      console.log(solBalance);
-      console.log(calculateWinnings());
+      console.log(`New Balance: ${newBalance}`);
+      console.log(`Current Balance: ${solBalance}`);
+      console.log(`Winnings: ${calculateWinnings()}`);
       if (newBalance === solBalance + calculateWinnings()) {
         setFundingUserProgress(null);
         setSolBalance(newBalance);
