@@ -92,6 +92,8 @@ export default function CredJack() {
         setFundingUserProgress(null);
         setSolBalance(newBalance);
         setCurrentBet(null);
+      } else if (newBalance > solBalance + calculateWinnings()) {
+        console.log('Memory Leak Occurred');
       }
     }
   };
