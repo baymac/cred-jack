@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
+import { useInterval } from '../../hooks/useInterval';
 import fetchJson from '../../lib/fetchJson';
 import useUser from '../../lib/useUser';
 import {
@@ -11,6 +12,7 @@ import {
 import rootStyles from '../../styles/root.module.css';
 import AddWallet from '../AddWallet/AddWallet';
 import ButtonLoading from '../ButtonLoading/ButtonLoading';
+import Loading from '../Loading/Loading';
 import styles from './credjack.module.css';
 
 interface Card {
@@ -64,14 +66,19 @@ export default function CredJack() {
   const [message, setMessage] = useState(null);
   const [placingBet, setPlacingBet] = useState(false);
   const [solBalance, setSolBalance] = useState(null);
-  const [fundingUserProgress, setFundingUserProgress] = useState(false);
+  const [fundingUserProgress, setFundingUserProgress] = useState(null);
 
   const updateBalance = async () => {
     const newBalance = await getBalance(
       getAccountFromLocalStorage('paymentKey').publicKey
     );
-    setSolBalance(newBalance);
+    if (newBalance > solBalance) {
+      setFundingUserProgress(null);
+      setSolBalance(newBalance);
+    }
   };
+
+  useInterval(updateBalance, fundingUserProgress);
 
   useEffect(() => {
     updateBalance();
@@ -295,14 +302,13 @@ export default function CredJack() {
   };
 
   const fundUser = () => {
-    setFundingUserProgress(true);
+    setFundingUserProgress(2000);
     requestAirDrops(
       getConnection().connection,
       getAccountFromLocalStorage('paymentKey'),
       calculateWinnings()
     );
-    setFundingUserProgress(false);
-    updateBalance();
+    // updateBalance();
   };
 
   return (
@@ -337,15 +343,6 @@ export default function CredJack() {
                 <AddWallet />
               </>
             )}
-            {/* <div className={styles.input_box}>
-              <button
-                onClick={() => {
-                  router.push('getsol');
-                }}
-              >
-                {!user?.sol_addr ? 'Create Wallet' : 'Get Solana'}
-              </button>
-            </div> */}
           </>
         )}
         {gameStates === States.progress && (
@@ -471,9 +468,17 @@ export default function CredJack() {
             {getAccountFromLocalStorage('paymentKey').publicKey.toBase58()}
           </p>
           <p className={styles.balance}>
-            Solana Balance: &nbsp;
-            {/* @ts-ignore */}
-            {JSON.stringify(solBalance) ?? 'fetching'}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              Solana Balance: &nbsp;
+              {/* @ts-ignore */}
+              {fundingUserProgress ? <Loading /> : JSON.stringify(solBalance)}
+            </div>
           </p>
         </div>
       </div>
