@@ -17,6 +17,10 @@ Winnings is caluclated using the following formula:
 round((bet_amount)*(trust_score/100))
 ```
 
+## Demo
+
+https://youtu.be/E6aPBEHzjpM?t=273
+
 ## Points Distribution
 
 | Card Type | Points  |

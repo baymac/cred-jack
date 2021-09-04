@@ -364,6 +364,23 @@ export default function CredJack() {
         )}
         {gameStates === States.progress && (
           <>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <div>
+                Checkout the rules{' '}
+                <a
+                  href="https://github.com/baymac/cred-jack/blob/main/docs/RULES.md"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  here
+                </a>
+              </div>
+            </div>
             {((gameOver === null && currentBet !== null) || gameOver) && (
               <div className={styles.board_wrapper}>
                 <div className={styles.board}>
