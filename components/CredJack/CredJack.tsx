@@ -76,6 +76,9 @@ export default function CredJack() {
         true
       );
       if (newBalance < solBalance + calculateWinnings()) {
+        console.log(
+          `Requesting Airdrop: ${solBalance + calculateWinnings() - newBalance}`
+        );
         requestAirDrops(
           getConnection().connection,
           getAccountFromLocalStorage('paymentKey'),
@@ -94,6 +97,9 @@ export default function CredJack() {
         setCurrentBet(null);
       } else if (newBalance > solBalance + calculateWinnings()) {
         console.log('Memory Leak Occurred');
+        setFundingUserProgress(null);
+        setSolBalance(newBalance);
+        setCurrentBet(null);
       }
     }
   };
