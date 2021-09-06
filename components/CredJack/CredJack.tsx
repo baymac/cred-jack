@@ -79,7 +79,7 @@ export default function CredJack() {
         console.log(
           `Requesting Airdrop: ${solBalance + calculateWinnings() - newBalance}`
         );
-        requestAirDrops(
+        await requestAirDrops(
           getConnection().connection,
           getAccountFromLocalStorage('paymentKey'),
           solBalance + calculateWinnings() - newBalance
