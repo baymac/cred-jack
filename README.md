@@ -1,8 +1,10 @@
-# cred-jack
+# CRED Jack
 
-Bad cops submission for Solana Hackathon.
+Team Bad Cops's submission for Solana's Building Out Loud hackathon - { WINNER of CRED Special Prize }
 
-An app built using React.js, Next.js and Solana Web3 JS lib. You can play Cred Jack (a minified version of Black Jack) and win SOL tokens based on your trust score.
+Our app integrates with CRED APIs to authenticate a user. It links their CRED profile to their Solana public address. Users can play CRED Jack using their account's CRED coins. They get SOL tokens based on the bet amount and trust score.
+
+The app was built using React.js, Next.js and @solana/web3.js libraries. 
 
 ## Local Setup
 
